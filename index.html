@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projekt: MyFirstPythonApp</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --text-color: #f8fafc;
+            --accent-color: #38bdf8;
+            --secondary-color: #94a3b8;
+            --card-bg: #1e293b;
+            --success-color: #4ade80;
+            --warning-color: #fbbf24;
+            --font-main: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Slide Container */
+        .slide-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 3rem 5rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            transform: translateY(20px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            z-index: 1;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--accent-color), #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+        }
+
+        h2 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            color: var(--accent-color);
+        }
+
+        h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        p, li {
+            font-size: 1.5rem;
+            line-height: 1.5;
+            color: var(--secondary-color);
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        ul {
+            list-style: none;
+            margin-top: 1.5rem;
+            text-align: left;
+            display: inline-block;
+        }
+
+        li {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        li::before {
+            content: "➜";
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        /* Specific Slide Styles */
+        .title-slide input {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--secondary-color);
+            color: var(--text-color);
+            font-size: 1.5rem;
+            padding: 0.5rem;
+            margin: 0.5rem;
+            font-family: var(--font-mono);
+            width: 350px;
+            text-align: center;
+            transition: border-color 0.3s;
+        }
+
+        .title-slide input:focus {
+            outline: none;
+            border-bottom-color: var(--accent-color);
+        }
+        
+        .title-slide .meta-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 4rem;
+            text-align: left;
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+            width: 100%;
+            max-width: 1400px;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: left;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .card h3 {
+            font-size: 1.8rem;
+            color: var(--accent-color);
+        }
+
+        .timeline-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 1000px;
+            margin-top: 3rem;
+            position: relative;
+        }
+
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--card-bg);
+            z-index: 0;
+            transform: translateY(-50%);
+        }
+
+        .timeline-point {
+            position: relative;
+            z-index: 1;
+            background: var(--bg-color);
+            padding: 0 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .point-marker {
+            width: 20px;
+            height: 20px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            margin-bottom: 1rem;
+            box-shadow: 0 0 0 5px rgba(56, 189, 248, 0.2);
+        }
+
+        .point-label {
+            font-weight: bold;
+            color: var(--text-color);
+            font-size: 1.2rem;
+        }
+
+        .point-time {
+            color: var(--secondary-color);
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .image-container {
+            background: #fff;
+            padding: 1rem;
+            border-radius: 1rem;
+            margin-top: 2rem;
+            max-width: 80%;
+            max-height: 50vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            max-height: 45vh;
+            object-fit: contain;
+            border-radius: 0.5rem;
+        }
+
+        /* Navigation Controls */
+        .controls {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            gap: 1rem;
+            z-index: 10;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: var(--text-color);
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--accent-color);
+            color: var(--bg-color);
+        }
+
+        .progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            height: 6px;
+            background: var(--accent-color);
+            width: 0%;
+            transition: width 0.3s ease;
+            z-index: 10;
+        }
+
+        .slide-number {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            font-family: var(--font-mono);
+            color: var(--secondary-color);
+            font-size: 1rem;
+        }
+
+        .highlight {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+        
+        .big-number {
+            font-size: 4rem;
+            font-weight: 800;
+            color: rgba(255,255,255,0.1);
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+
+        /* Reveal Card Styles */
+        .reveal-card {
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .reveal-card::after {
+            content: "Klicken zum Aufdecken";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+            opacity: 1;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .reveal-card.revealed::after {
+            opacity: 0;
+        }
+
+        .reveal-card .card-content {
+            opacity: 0;
+            filter: blur(5px);
+            transition: all 0.5s ease;
+            transform: translateY(10px);
+        }
+
+        .reveal-card.revealed .card-content {
+            opacity: 1;
+            filter: blur(0);
+            transform: translateY(0);
+        }
+
+        .reveal-card h3 {
+            transition: color 0.3s ease;
+        }
+
+        .reveal-card:hover h3 {
+            color: #fff;
+        }
+
+        /* Image Expansion Styles */
+        .expandable-image-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .expand-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.6);
+            border: none;
+            color: white;
+            padding: 8px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .expand-btn:hover {
+            background: var(--accent-color);
+            transform: scale(1.1);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.show .modal-content {
+            transform: scale(1);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            z-index: 1001;
+        }
+
+        .close-modal:hover {
+            color: var(--accent-color);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="slide-number" id="slideNumber">1 / 9</div>
+
+    <div class="slide-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active title-slide">
+            <h1>Projekt: MyFirstPythonApp</h1>
+            <h2>Teil 1: Die Planung</h2>
+            <p>Vom Kopf in den Computer – ohne Code.</p>
+            
+            <div class="meta-info">
+                <div>
+                    <input type="text" placeholder="Dein Name">
+                </div>
+                <div>
+                    <input type="text" value="Klasse 8" readonly style="width: 150px; text-align: center;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Was machen wir heute? -->
+        <div class="slide">
+            <h2>Was machen wir heute?</h2>
+            <div class="grid-layout">
+                <div class="card">
+                    <h3>🎯 Unser Ziel</h3>
+                    <p>Wir planen eine eigene App, bevor wir sie programmieren.</p>
+                </div>
+                <div class="card">
+                    <h3>🛠️ Das Werkzeug</h3>
+                    <p>Wir nutzen den <strong>Structorizer</strong>, um unsere Ideen als Struktogramm zu zeichnen.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Ablauf -->
+        <div class="slide">
+            <h2>Der Fahrplan</h2>
+            <div class="timeline-container">
+                <div class="timeline-point">
+                    <div class="point-marker"></div>
+                    <div class="point-label">Start</div>
+                    <div class="point-time">5 Min</div>
+                </div>
+                <div class="timeline-point">
+                    <div class="point-marker"></div>
+                    <div class="point-label">Demo</div>
+                    <div class="point-time">15 Min</div>
+                </div>
+                <div class="timeline-point">
+                    <div class="point-marker"></div>
+                    <div class="point-label">Briefing</div>
+                    <div class="point-time">15 Min</div>
+                </div>
+                <div class="timeline-point">
+                    <div class="point-marker"></div>
+                    <div class="point-label">Coding Time</div>
+                    <div class="point-time">45 Min</div>
+                </div>
+                <div class="timeline-point">
+                    <div class="point-marker"></div>
+                    <div class="point-label">Ende</div>
+                    <div class="point-time">10 Min</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Reaktivierung -->
+        <div class="slide">
+            <h2>Flashback: Algorithmen & Daten</h2>
+            <p>Erinnert ihr euch an letzte Woche? Diese Bausteine brauchen wir:</p>
+            <br>
+            <div class="grid-layout">
+                <div class="card reveal-card">
+                    <h3>1. Sequenz</h3>
+                    <div class="card-content">
+                        <p>Schritt für Schritt.<br><em>"Erst Socken, dann Schuhe."</em></p>
+                    </div>
+                </div>
+                <div class="card reveal-card">
+                    <h3>2. Verzweigung</h3>
+                    <div class="card-content">
+                        <p>Entscheidung (Ja/Nein).<br><em>"Regnet es? Nimm Schirm."</em></p>
+                    </div>
+                </div>
+                <div class="card reveal-card">
+                    <h3>3. Schleife</h3>
+                    <div class="card-content">
+                        <p>Wiederholung.<br><em>"Solange Hunger: Essen."</em></p>
+                    </div>
+                </div>
+                <div class="card reveal-card">
+                    <h3>4. Listen</h3>
+                    <div class="card-content">
+                        <p>Viele Daten speichern.<br><em>"Einkaufszettel, Highscores."</em></p>
+                    </div>
+                </div>
+                <div class="card reveal-card">
+                    <h3>5. Variablen</h3>
+                    <div class="card-content">
+                        <p>Daten merken.<br><em>"Punkte, Name, Leben."</em></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Tool Demo -->
+        <div class="slide">
+            <h2>Unser Beispiel: Der Noten-Rechner</h2>
+            <p>So sieht ein fertiger Plan im Structorizer aus:</p>
+            
+            <div class="image-container">
+                <!-- Image embedded here -->
+                <div class="expandable-image-container">
+                    <img src="Noten%20rechner.png" alt="Struktogramm Notenrechner" id="notenRechnerImg">
+                    <button class="expand-btn" id="expandBtn" aria-label="Bild vergrößern">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="card" style="margin-top: 2rem; padding: 1.5rem;">
+                <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">⚡ Kurz-Auftrag (10 Min)</h3>
+                <p>Baut dieses Skript im Structorizer nach, um warm zu werden!</p>
+            </div>
+        </div>
+
+        <!-- Slide 6: Deine Mission -->
+        <div class="slide">
+            <h2>Wähle deine Mission</h2>
+            <div class="grid-layout">
+                <div class="card" style="border-color: var(--warning-color);">
+                    <h3>🚀 Option A: Freestyler</h3>
+                    <p>Du hast eine eigene Idee?</p>
+                    <ul>
+                        <li>Text-Adventure</li>
+                        <li>Passwort-Generator</li>
+                        <li>Quiz</li>
+                    </ul>
+                    <p style="margin-top: 1rem; color: var(--warning-color); font-weight: bold;">Muss genehmigt werden!</p>
+                </div>
+                <div class="card" style="border-color: var(--success-color);">
+                    <h3>🛡️ Option B: Safe Play</h3>
+                    <p>Wähle ein fertiges Szenario:</p>
+                    <ul>
+                        <li><strong>Vokabel-Trainer</strong> (Listen & Abfrage)</li>
+                        <li><strong>Einkaufs-Manager</strong> (Hinzufügen & Anzeigen)</li>
+                        <li><strong>Mathe-Duell</strong> (Rechnen & Highscore)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6b: Option B Details -->
+        <div class="slide">
+            <h2>Option B: Die Details</h2>
+            <div class="grid-layout">
+                <div class="card">
+                    <h3>📚 Vokabel-Trainer</h3>
+                    <ul>
+                        <li><strong>Liste:</strong> Speichere mind. 3 Wörter (z.B. Englisch/Deutsch).</li>
+                        <li><strong>Schleife:</strong> Frage alle Wörter nacheinander ab.</li>
+                        <li><strong>If/Else:</strong> Prüfe Eingabe (Richtig/Falsch).</li>
+                        <li><strong>Variable:</strong> Zähle Punkte mit.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>🛒 Einkaufs-Manager</h3>
+                    <ul>
+                        <li><strong>Endlos-Schleife:</strong> Zeige immer wieder das Menü.</li>
+                        <li><strong>If/Else:</strong> Menü-Wahl (1. Hinzufügen, 2. Anzeigen, 3. Ende).</li>
+                        <li><strong>Liste:</strong> Speichere die Produkte.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>➗ Mathe-Duell</h3>
+                    <ul>
+                        <li><strong>Schleife:</strong> Stelle genau 5 Aufgaben.</li>
+                        <li><strong>If/Else:</strong> Prüfe Ergebnis (Richtig/Falsch).</li>
+                        <li><strong>Liste:</strong> Merke dir "Richtig" oder "Falsch" für jede Runde in einer Liste.</li>
+                        <li><strong>Ende:</strong> Zeige die Auswertung.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Regeln -->
+        <div class="slide">
+            <h2>Die Regeln für heute</h2>
+            <div class="grid-layout">
+                <div class="card">
+                    <h3>✅ DO's</h3>
+                    <ul>
+                        <li>Nutze <strong>Schleifen</strong> & <strong>Verzweigungen</strong>.</li>
+                        <li>Denke logisch: Was passiert wann?</li>
+                        <li>Nutze deutsche Sätze ("Frage nach Zahl").</li>
+                    </ul>
+                </div>
+                <div class="card" style="background: rgba(239, 68, 68, 0.1); border-color: #ef4444;">
+                    <h3>❌ DON'Ts</h3>
+                    <ul>
+                        <li><strong>Kein Python Code!</strong></li>
+                        <li>Kein <code>print()</code> oder <code>input()</code>.</li>
+                        <li>Keine Syntax-Fehler suchen (wir planen nur!).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Arbeitsphase -->
+        <div class="slide">
+            <div class="big-number">45:00</div>
+            <h2>Let's Plan!</h2>
+            <p>Startet den Structorizer und legt los.</p>
+            <br>
+            <div class="card" style="text-align: center; max-width: 600px;">
+                <h3>Checkliste</h3>
+                <ul style="display: inline-block; text-align: left;">
+                    <li>Habe ich eine Schleife eingebaut?</li>
+                    <li>Gibt es eine Wenn-Dann Entscheidung?</li>
+                    <li>Macht der Ablauf Sinn?</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 9: Bewertungskriterien -->
+        <div class="slide">
+            <h2>So gibt's die Note (50/50)</h2>
+            <div class="grid-layout">
+                <div class="card">
+                    <h3>Teil 1: Der Plan (Heute)</h3>
+                    <ul>
+                        <li><strong>Logik:</strong> Funktioniert der Ablauf? (Keine Sackgassen)</li>
+                        <li><strong>Symbolik:</strong> Richtige Blöcke genutzt?</li>
+                        <li><strong>No-Code:</strong> Keine Python-Befehle!</li>
+                        <li><strong>Vollständigkeit:</strong> Liste, Schleife & If/Else dabei?</li>
+                    </ul>
+                </div>
+                <div class="card" style="opacity: 0.8; border-style: dashed;">
+                    <h3>Teil 2: Der Code (Nächste Woche)</h3>
+                    <ul>
+                        <li><strong>Funktionalität:</strong> Läuft die App?</li>
+                        <li><strong>Syntax:</strong> Keine Fehler im Code.</li>
+                        <li><strong>Style:</strong> Gute Variablennamen & Kommentare.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Abschluss -->
+        <div class="slide">
+            <h2>Check-out</h2>
+            <div class="grid-layout" style="justify-content: center;">
+                <div class="card">
+                    <h3>💾 Speichern nicht vergessen!</h3>
+                    <p>1. Als <strong>XML</strong> (damit wir nächste Woche weiterarbeiten können).</p>
+                    <p>2. Als <strong>PNG</strong> (für mich zur Abgabe).</p>
+                </div>
+            </div>
+            <br><br>
+            <h3>Bis nächste Woche! 👋</h3>
+        </div>
+
+    </div>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="modal">
+        <span class="close-modal">&times;</span>
+        <img class="modal-content" id="modalImg">
+    </div>
+
+    <div class="controls">
+        <button class="nav-btn" id="prevBtn" aria-label="Previous Slide">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <button class="nav-btn" id="nextBtn" aria-label="Next Slide">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const progressBar = document.getElementById('progressBar');
+            const slideNumberDisplay = document.getElementById('slideNumber');
+            
+            let currentSlide = 0;
+            const totalSlides = slides.length;
+
+            function updateSlide() {
+                // Update Slide Visibility
+                slides.forEach((slide, index) => {
+                    if (index === currentSlide) {
+                        slide.classList.add('active');
+                    } else {
+                        slide.classList.remove('active');
+                    }
+                });
+
+                // Update Progress Bar
+                const progress = ((currentSlide + 1) / totalSlides) * 100;
+                progressBar.style.width = `${progress}%`;
+
+                // Update Slide Number
+                slideNumberDisplay.textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+                // Update Button States
+                prevBtn.disabled = currentSlide === 0;
+                prevBtn.style.opacity = currentSlide === 0 ? '0.3' : '1';
+                
+                nextBtn.disabled = currentSlide === totalSlides - 1;
+                nextBtn.style.opacity = currentSlide === totalSlides - 1 ? '0.3' : '1';
+            }
+
+            function nextSlide() {
+                if (currentSlide < totalSlides - 1) {
+                    currentSlide++;
+                    updateSlide();
+                }
+            }
+
+            function prevSlide() {
+                if (currentSlide > 0) {
+                    currentSlide--;
+                    updateSlide();
+                }
+            }
+
+            // Event Listeners
+            nextBtn.addEventListener('click', nextSlide);
+            prevBtn.addEventListener('click', prevSlide);
+
+            // Keyboard Navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight' || e.key === ' ') {
+                    nextSlide();
+                } else if (e.key === 'ArrowLeft') {
+                    prevSlide();
+                }
+            });
+
+            // Reveal Cards Logic
+            const revealCards = document.querySelectorAll('.reveal-card');
+            revealCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    card.classList.toggle('revealed');
+                });
+            });
+
+            // Image Modal Logic
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImg');
+            const expandBtn = document.getElementById('expandBtn');
+            const sourceImg = document.getElementById('notenRechnerImg');
+            const closeModal = document.querySelector('.close-modal');
+
+            if (expandBtn && modal && modalImg && sourceImg) {
+                expandBtn.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent slide navigation if any
+                    modal.classList.add('show');
+                    modalImg.src = sourceImg.src;
+                });
+
+                closeModal.addEventListener('click', () => {
+                    modal.classList.remove('show');
+                });
+
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.classList.remove('show');
+                    }
+                });
+
+                // Close on Escape key
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && modal.classList.contains('show')) {
+                        modal.classList.remove('show');
+                    }
+                });
+            }
+
+            // Initialize
+            updateSlide();
+        });
+    </script>
+</body>
+</html>

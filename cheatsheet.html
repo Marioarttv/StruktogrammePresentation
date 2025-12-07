@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Cheatsheet: Die 5 Bausteine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --text-color: #f8fafc;
+            --accent-color: #38bdf8;
+            --secondary-color: #94a3b8;
+            --card-bg: #1e293b;
+            --code-bg: #000000;
+            --border-color: #334155;
+            --font-main: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            /* Syntax Highlighting Colors */
+            --sh-keyword: #c678dd;
+            --sh-string: #98c379;
+            --sh-number: #d19a66;
+            --sh-comment: #5c6370;
+            --sh-function: #61afef;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+            color: var(--accent-color);
+        }
+
+        p.subtitle {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--secondary-color);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            gap: 2rem;
+        }
+
+        .concept-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .concept-card h2 {
+            margin-bottom: 0.5rem;
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .concept-card p {
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+        }
+
+        .code-block {
+            background: var(--code-bg);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.95rem;
+            overflow-x: auto;
+            white-space: pre;
+            color: #abb2bf;
+        }
+
+        /* Syntax Highlighting Classes */
+        .k { color: var(--sh-keyword); } /* Keyword */
+        .s { color: var(--sh-string); } /* String */
+        .n { color: var(--sh-number); } /* Number */
+        .c { color: var(--sh-comment); font-style: italic; } /* Comment */
+        .f { color: var(--sh-function); } /* Function */
+
+        /* Back Button */
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .back-btn:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="back-btn">← Zurück zur Präsentation</a>
+
+    <h1>Python Cheatsheet</h1>
+    <p class="subtitle">Die Syntax für eure Projekte</p>
+
+    <div class="container">
+        
+        <!-- 1. Variablen -->
+        <div class="concept-card">
+            <h2>1. Variablen</h2>
+            <p>Zum Speichern von einzelnen Werten (Zahlen, Text).</p>
+            <div class="code-block">
+<span class="c"># Text speichern</span>
+name = <span class="s">"Mario"</span>
+
+<span class="c"># Zahl speichern</span>
+punkte = <span class="n">0</span>
+
+<span class="c"># Rechnen</span>
+punkte = punkte + <span class="n">1</span>
+            </div>
+        </div>
+
+        <!-- 2. Sequenz -->
+        <div class="concept-card">
+            <h2>2. Sequenz (Ein/Ausgabe)</h2>
+            <p>Befehle werden nacheinander ausgeführt.</p>
+            <div class="code-block">
+<span class="f">print</span>(<span class="s">"Hallo!"</span>)
+name = <span class="f">input</span>(<span class="s">"Wie heißt du? "</span>)
+<span class="f">print</span>(<span class="s">"Hallo "</span> + name)
+            </div>
+        </div>
+
+        <!-- 3. Verzweigung -->
+        <div class="concept-card">
+            <h2>3. Verzweigung (If/Else)</h2>
+            <p>Entscheidungen treffen.</p>
+            <div class="code-block">
+alter = <span class="n">16</span>
+
+<span class="k">if</span> alter >= <span class="n">18</span>:
+    <span class="f">print</span>(<span class="s">"Du bist volljährig."</span>)
+<span class="k">else</span>:
+    <span class="f">print</span>(<span class="s">"Du bist noch minderjährig."</span>)
+            </div>
+        </div>
+
+        <!-- 4. Schleife -->
+        <div class="concept-card">
+            <h2>4. Schleife (Loop)</h2>
+            <p>Dinge wiederholen.</p>
+            <div class="code-block">
+<span class="c"># Zählschleife (z.B. 5 mal)</span>
+<span class="k">for</span> i <span class="k">in</span> <span class="f">range</span>(<span class="n">5</span>):
+    <span class="f">print</span>(<span class="s">"Hallo"</span>)
+
+<span class="c"># Bedingte Schleife (Solange...)</span>
+running = <span class="k">True</span>
+<span class="k">while</span> running:
+    befehl = <span class="f">input</span>(<span class="s">"Ende? (j/n)"</span>)
+    <span class="k">if</span> befehl == <span class="s">"j"</span>:
+        running = <span class="k">False</span>
+            </div>
+        </div>
+
+        <!-- 5. Listen -->
+        <div class="concept-card">
+            <h2>5. Listen</h2>
+            <p>Viele Werte in einer Variable speichern.</p>
+            <div class="code-block">
+<span class="c"># Liste erstellen</span>
+freunde = [<span class="s">"Anna"</span>, <span class="s">"Tom"</span>, <span class="s">"Lisa"</span>]
+
+<span class="c"># Etwas hinzufügen</span>
+freunde.<span class="f">append</span>(<span class="s">"Kevin"</span>)
+
+<span class="c"># Alles anzeigen (mit Schleife)</span>
+<span class="k">for</span> freund <span class="k">in</span> freunde:
+    <span class="f">print</span>(freund)
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

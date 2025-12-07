@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beispiel-Lösungen: MyFirstPythonApp</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --text-color: #f8fafc;
+            --accent-color: #38bdf8;
+            --secondary-color: #94a3b8;
+            --card-bg: #1e293b;
+            --border-color: #f8fafc;
+            --font-main: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 2rem;
+            line-height: 1.5;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2.5rem;
+            color: var(--accent-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .project-card h2 {
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: var(--accent-color);
+        }
+
+        /* Nassi-Shneiderman CSS Styles */
+        .nsd {
+            font-family: var(--font-main);
+            font-size: 0.9rem;
+            border: 2px solid var(--border-color);
+            background: #fff;
+            color: #000;
+            width: 100%;
+        }
+
+        .nsd-block {
+            border-bottom: 1px solid #000;
+            padding: 0.5rem;
+            text-align: left;
+        }
+
+        .nsd-block:last-child {
+            border-bottom: none;
+        }
+
+        /* Sequence (Simple Block) */
+        .nsd-seq {
+            padding: 0.5rem;
+            border-bottom: 1px solid #000;
+        }
+        .nsd-seq:last-child {
+            border-bottom: none;
+        }
+
+        /* Loop (For/While) */
+        .nsd-loop {
+            border-bottom: 1px solid #000;
+            display: flex;
+            flex-direction: column;
+        }
+        .nsd-loop-header {
+            background: #e2e8f0;
+            padding: 0.25rem 0.5rem;
+            font-weight: bold;
+            border-bottom: 1px solid #000;
+        }
+        .nsd-loop-body {
+            margin-left: 1.5rem; /* Indent */
+            border-left: 1px solid #000;
+        }
+
+        /* If/Else (Alternative) */
+        .nsd-if {
+            border-bottom: 1px solid #000;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .nsd-if-header {
+            position: relative;
+            height: 60px;
+            border-bottom: 1px solid #000;
+            overflow: hidden;
+        }
+
+        /* Triangle simulation with CSS */
+        .nsd-if-header svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .nsd-if-condition {
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: bold;
+            background: rgba(255,255,255,0.8);
+            padding: 0 5px;
+        }
+
+        .nsd-if-true-label {
+            position: absolute;
+            bottom: 2px;
+            left: 5px;
+            font-size: 0.8rem;
+            color: green;
+            font-weight: bold;
+        }
+
+        .nsd-if-false-label {
+            position: absolute;
+            bottom: 2px;
+            right: 5px;
+            font-size: 0.8rem;
+            color: red;
+            font-weight: bold;
+        }
+
+        .nsd-if-body {
+            display: flex;
+        }
+
+        .nsd-if-true {
+            flex: 1;
+            border-right: 1px solid #000;
+        }
+
+        .nsd-if-false {
+            flex: 1;
+        }
+
+        /* Back Button */
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .back-btn:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="back-btn">← Zurück zur Präsentation</a>
+
+    <h1>Beispiel-Lösungen (Struktogramme)</h1>
+
+    <div class="container">
+        
+        <!-- Project 1: Vokabel-Trainer -->
+        <div class="project-card">
+            <h2>📚 Vokabel-Trainer</h2>
+            <div class="nsd">
+                <div class="nsd-seq">Liste 'woerter' = ["Dog", "Cat", "Mouse"]</div>
+                <div class="nsd-seq">Liste 'loesungen' = ["Hund", "Katze", "Maus"]</div>
+                <div class="nsd-seq">Variable 'punkte' = 0</div>
+                
+                <!-- Loop -->
+                <div class="nsd-loop">
+                    <div class="nsd-loop-header">Für i von 0 bis Länge(woerter)-1</div>
+                    <div class="nsd-loop-body">
+                        <div class="nsd-seq">Ausgabe: "Was heißt " + woerter[i] + "?"</div>
+                        <div class="nsd-seq">Eingabe: antwort</div>
+                        
+                        <!-- If/Else -->
+                        <div class="nsd-if">
+                            <div class="nsd-if-header">
+                                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                                    <line x1="0" y1="0" x2="100" y2="0" stroke="black" stroke-width="1" />
+                                    <line x1="0" y1="0" x2="50" y2="100" stroke="black" stroke-width="1" />
+                                    <line x1="100" y1="0" x2="50" y2="100" stroke="black" stroke-width="1" />
+                                </svg>
+                                <span class="nsd-if-condition">antwort == loesungen[i]?</span>
+                                <span class="nsd-if-true-label">Wahr (Ja)</span>
+                                <span class="nsd-if-false-label">Falsch (Nein)</span>
+                            </div>
+                            <div class="nsd-if-body">
+                                <div class="nsd-if-true">
+                                    <div class="nsd-seq">Ausgabe: "Richtig!"</div>
+                                    <div class="nsd-seq">punkte = punkte + 1</div>
+                                </div>
+                                <div class="nsd-if-false">
+                                    <div class="nsd-seq">Ausgabe: "Falsch! Es wäre " + loesungen[i]</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nsd-seq" style="border-bottom: none;">Ausgabe: "Du hast " + punkte + " Punkte."</div>
+            </div>
+        </div>
+
+        <!-- Project 2: Einkaufs-Manager -->
+        <div class="project-card">
+            <h2>🛒 Einkaufs-Manager</h2>
+            <div class="nsd">
+                <div class="nsd-seq">Liste 'einkaufsliste' = []</div>
+                <div class="nsd-seq">Variable 'running' = true</div>
+                
+                <!-- While Loop -->
+                <div class="nsd-loop">
+                    <div class="nsd-loop-header">Solange running == true</div>
+                    <div class="nsd-loop-body">
+                        <div class="nsd-seq">Ausgabe: "1: Hinzufügen, 2: Anzeigen, 3: Ende"</div>
+                        <div class="nsd-seq">Eingabe: wahl</div>
+                        
+                        <!-- Switch Case Simulation (Nested Ifs for simplicity in CSS) -->
+                        <div class="nsd-if">
+                            <div class="nsd-if-header">
+                                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                                    <line x1="0" y1="0" x2="100" y2="0" stroke="black" stroke-width="1" />
+                                    <line x1="0" y1="0" x2="50" y2="100" stroke="black" stroke-width="1" />
+                                    <line x1="100" y1="0" x2="50" y2="100" stroke="black" stroke-width="1" />
+                                </svg>
+                                <span class="nsd-if-condition">wahl == "1"?</span>
+                                <span class="nsd-if-true-label">Ja</span>
+                                <span class="nsd-if-false-label">Nein</span>
+                            </div>
+                            <div class="nsd-if-body">
+                                <div class="nsd-if-true">
+                                    <div class="nsd-seq">Eingabe: produkt</div>
+                                    <div class="nsd-seq">Füge produkt zu einkaufsliste hinzu</div>
+                                </div>
+                                <div class="nsd-if-false">
+                                    <!-- Nested If for Option 2 -->
+                                    <div class="nsd-if" style="border-bottom: none;">
+                                        <div class="nsd-if-header">
+                                            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                                                <line x1="0" y1="0" x2="100" y2="0" stroke="black" stroke-width="1" />
+                                                <line x1="0" y1="0" x2="50" y2="100" stroke="black" stroke-width="1" />
+                                                <line x1="100" y1="0" x2="50" y2="100" stroke="black" stroke-width="1" />
+                                            </svg>
+                                            <span class="nsd-if-condition">wahl == "2"?</span>
+                                            <span class="nsd-if-true-label">Ja</span>
+                                            <span class="nsd-if-false-label">Nein</span>
+                                        </div>
+                                        <div class="nsd-if-body">
+                                            <div class="nsd-if-true">
+                                                <div class="nsd-loop" style="border-bottom: none;">
+                                                    <div class="nsd-loop-header">Für jedes item in einkaufsliste</div>
+                                                    <div class="nsd-loop-body">
+                                                        <div class="nsd-seq" style="border-bottom: none;">Ausgabe: item</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="nsd-if-false">
+                                                <!-- Option 3 -->
+                                                <div class="nsd-seq" style="border-bottom: none;">running = false</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project 3: Mathe-Duell -->
+        <div class="project-card">
+            <h2>➗ Mathe-Duell</h2>
+            <div class="nsd">
+                <div class="nsd-seq">Liste 'ergebnisse' = []</div>
+                
+                <!-- For Loop -->
+                <div class="nsd-loop">
+                    <div class="nsd-loop-header">Für i von 1 bis 5</div>
+                    <div class="nsd-loop-body">
+                        <div class="nsd-seq">Generiere Zufallszahlen a und b</div>
+                        <div class="nsd-seq">Ausgabe: "Was ist " + a + " + " + b + "?"</div>
+                        <div class="nsd-seq">Eingabe: antwort</div>
+                        
+                        <!-- If/Else -->
+                        <div class="nsd-if">
+                            <div class="nsd-if-header">
+                                <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                                    <line x1="0" y1="0" x2="100" y2="0" stroke="black" stroke-width="1" />
+                                    <line x1="0" y1="0" x2="50" y2="100" stroke="black" stroke-width="1" />
+                                    <line x1="100" y1="0" x2="50" y2="100" stroke="black" stroke-width="1" />
+                                </svg>
+                                <span class="nsd-if-condition">antwort == a + b?</span>
+                                <span class="nsd-if-true-label">Wahr</span>
+                                <span class="nsd-if-false-label">Falsch</span>
+                            </div>
+                            <div class="nsd-if-body">
+                                <div class="nsd-if-true">
+                                    <div class="nsd-seq">Ausgabe: "Richtig!"</div>
+                                    <div class="nsd-seq">Füge "Richtig" zu ergebnisse hinzu</div>
+                                </div>
+                                <div class="nsd-if-false">
+                                    <div class="nsd-seq">Ausgabe: "Falsch!"</div>
+                                    <div class="nsd-seq">Füge "Falsch" zu ergebnisse hinzu</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nsd-seq" style="border-bottom: none;">Ausgabe: "Deine Ergebnisse: " + ergebnisse</div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
