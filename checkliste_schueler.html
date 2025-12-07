@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkliste: MyFirstPythonApp</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --text-color: #f8fafc;
+            --accent-color: #38bdf8;
+            --secondary-color: #94a3b8;
+            --card-bg: #1e293b;
+            --success-color: #4ade80;
+            --warning-color: #fbbf24;
+            --danger-color: #f87171;
+            --font-main: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 2rem;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Back Button */
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .back-btn:hover {
+            text-decoration: underline;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, var(--accent-color), #818cf8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+        }
+
+        /* Progress & Grade Container */
+        .progress-container {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .progress-bar-bg {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-bar-fill {
+            background: linear-gradient(to right, var(--accent-color), var(--success-color));
+            height: 100%;
+            width: 0%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .progress-label {
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+        }
+
+        /* Grade Display */
+        .grade-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .grade-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-color), #818cf8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 4px 20px rgba(56, 189, 248, 0.3);
+        }
+
+        .grade-info {
+            text-align: left;
+        }
+
+        .grade-label {
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+        }
+
+        .grade-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        /* Section */
+        .section {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section h2 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-description {
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .section-progress {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .section-progress .points {
+            color: var(--success-color);
+            font-weight: bold;
+        }
+
+        /* Checklist Item */
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .checklist-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(56, 189, 248, 0.3);
+        }
+
+        .checklist-item.has-points {
+            background: rgba(74, 222, 128, 0.1);
+            border-color: rgba(74, 222, 128, 0.3);
+        }
+
+        .item-content {
+            flex: 1;
+        }
+
+        .item-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .item-hint {
+            font-size: 0.85rem;
+            color: var(--secondary-color);
+        }
+
+        /* Point Controls */
+        .point-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .point-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .point-btn:hover {
+            background: var(--accent-color);
+            color: var(--bg-color);
+        }
+
+        .point-btn:active {
+            transform: scale(0.9);
+        }
+
+        .point-display {
+            min-width: 70px;
+            text-align: center;
+            padding: 0.25rem 0.5rem;
+            background: rgba(56, 189, 248, 0.2);
+            border-radius: 0.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .point-display.full {
+            background: rgba(74, 222, 128, 0.2);
+            color: var(--success-color);
+        }
+
+        .point-display.partial {
+            background: rgba(251, 191, 36, 0.2);
+            color: var(--warning-color);
+        }
+
+        .point-display.zero {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--secondary-color);
+        }
+
+        /* Quick Buttons */
+        .quick-btns {
+            display: flex;
+            gap: 0.25rem;
+            margin-left: 0.5rem;
+        }
+
+        .quick-btn {
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: transparent;
+            color: var(--secondary-color);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quick-btn:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        /* Tips */
+        .tips-box {
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .tips-box h4 {
+            color: var(--warning-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tips-box ul {
+            list-style: none;
+            color: var(--secondary-color);
+        }
+
+        .tips-box li {
+            padding-left: 1.5rem;
+            position: relative;
+            margin-bottom: 0.5rem;
+        }
+
+        .tips-box li::before {
+            content: "⚡";
+            position: absolute;
+            left: 0;
+        }
+
+        /* Grade Scale Info */
+        .grade-scale {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .grade-scale h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .grade-scale-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 0.5rem;
+            text-align: center;
+        }
+
+        .grade-scale-item {
+            padding: 0.4rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 0.5rem;
+        }
+
+        .grade-scale-item .grade {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .grade-scale-item .range {
+            font-size: 0.7rem;
+            color: var(--secondary-color);
+        }
+
+        .grade-scale-row {
+            display: contents;
+        }
+
+        .grade-scale-label {
+            grid-column: 1 / -1;
+            text-align: left;
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+            margin-top: 0.5rem;
+            padding-left: 0.25rem;
+        }
+
+        /* Reset Button */
+        .reset-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: rgba(248, 113, 113, 0.1);
+            border: 1px solid rgba(248, 113, 113, 0.3);
+            color: var(--danger-color);
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+        }
+
+        .reset-btn:hover {
+            background: rgba(248, 113, 113, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--secondary-color);
+        }
+
+        footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            body {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .section {
+                padding: 1.25rem;
+            }
+
+            .checklist-item {
+                flex-wrap: wrap;
+                padding: 0.75rem;
+            }
+
+            .point-controls {
+                width: 100%;
+                justify-content: flex-end;
+                margin-top: 0.5rem;
+            }
+
+            .grade-scale-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .grade-scale-label {
+                margin-top: 0.75rem;
+            }
+
+            .grade-display {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .grade-info {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="index.html" class="back-btn">← Zurück zur Präsentation</a>
+
+        <header>
+            <h1>✅ Projekt-Checkliste</h1>
+            <p class="subtitle">Bewertung mit Punktevergabe</p>
+        </header>
+
+        <!-- Progress & Grade Overview -->
+        <div class="progress-container">
+            <span class="progress-label">Dein Fortschritt</span>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progressBar"></div>
+            </div>
+            <span class="progress-text" id="progressText">0 / 100 Punkte</span>
+            
+            <div class="grade-display">
+                <div class="grade-circle" id="gradeCircle">-</div>
+                <div class="grade-info">
+                    <div class="grade-label">Deine Note</div>
+                    <div class="grade-name" id="gradeName">Noch keine Punkte</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grade Scale -->
+        <div class="grade-scale">
+            <h3>📊 Notenschlüssel</h3>
+            <div class="grade-scale-grid">
+                <div class="grade-scale-item">
+                    <div class="grade">1</div>
+                    <div class="range">96-100</div>
+                </div>
+                <div class="grade-scale-item">
+                    <div class="grade">1,5</div>
+                    <div class="range">91-95</div>
+                </div>
+                <div class="grade-scale-item">
+                    <div class="grade">2</div>
+                    <div class="range">85-90</div>
+                </div>
+                <div class="grade-scale-item">
+                    <div class="grade">2,5</div>
+                    <div class="range">80-84</div>
+                </div>
+                <div class="grade-scale-item">
+                    <div class="grade">3</div>
+                    <div class="range">72-79</div>
+                </div>
+                <div class="grade-scale-item">
+                    <div class="grade">3,5</div>
+                    <div class="range">65-71</div>
+                </div>
+                <div class="grade-scale-item">
+                    <div class="grade">4</div>
+                    <div class="range">55-64</div>
+                </div>
+                <div class="grade-scale-item">
+                    <div class="grade">4,5</div>
+                    <div class="range">46-54</div>
+                </div>
+                <div class="grade-scale-item">
+                    <div class="grade">5</div>
+                    <div class="range">30-45</div>
+                </div>
+                <div class="grade-scale-item">
+                    <div class="grade">5,5</div>
+                    <div class="range">18-29</div>
+                </div>
+                <div class="grade-scale-item">
+                    <div class="grade">6</div>
+                    <div class="range">0-17</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 1: Planung (40 Punkte) -->
+        <div class="section" data-section="planung">
+            <h2>📐 Teil 1: Planung (Struktogramm)</h2>
+            <p class="section-description">Dein Plan im Structorizer – ohne Code!</p>
+            <div class="section-progress">
+                <span>Erreicht:</span>
+                <span class="points" id="planungPoints">0</span>
+                <span>/ 40 Punkte</span>
+            </div>
+
+            <div class="checklist-item" data-max-points="5" data-current-points="0">
+                <div class="item-content">
+                    <div class="item-title">Startpunkt & Endpunkt klar</div>
+                    <div class="item-hint">Dein Programm hat einen eindeutigen Anfang und ein logisches Ende.</div>
+                </div>
+                <div class="point-controls">
+                    <button class="point-btn minus">−</button>
+                    <span class="point-display zero">0 / 5</span>
+                    <button class="point-btn plus">+</button>
+                    <div class="quick-btns">
+                        <button class="quick-btn" data-value="0">0</button>
+                        <button class="quick-btn" data-value="max">max</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checklist-item" data-max-points="5" data-current-points="0">
+                <div class="item-content">
+                    <div class="item-title">Ablauf ist logisch</div>
+                    <div class="item-hint">Die Schritte sind in der richtigen Reihenfolge und ergeben Sinn.</div>
+                </div>
+                <div class="point-controls">
+                    <button class="point-btn minus">−</button>
+                    <span class="point-display zero">0 / 5</span>
+                    <button class="point-btn plus">+</button>
+                    <div class="quick-btns">
+                        <button class="quick-btn" data-value="0">0</button>
+                        <button class="quick-btn" data-value="max">max</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checklist-item" data-max-points="5" data-current-points="0">
+                <div class="item-content">
+                    <div class="item-title">Keine Sackgassen</div>
+                    <div class="item-hint">Jeder Pfad führt irgendwo hin – kein "toter Code".</div>
+                </div>
+                <div class="point-controls">
+                    <button class="point-btn minus">−</button>
+                    <span class="point-display zero">0 / 5</span>
+                    <button class="point-btn plus">+</button>
+                    <div class="quick-btns">
+                        <button class="quick-btn" data-value="0">0</button>
+                        <button class="quick-btn" data-value="max">max</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checklist-item" data-max-points="5" data-current-points="0">
+                <div class="item-content">
+                    <div class="item-title">Liste verwendet</div>
+                    <div class="item-hint">Du speicherst Daten in einer Liste (z.B. Wörter, Produkte, Ergebnisse).</div>
+                </div>
+                <div class="point-controls">
+                    <button class="point-btn minus">−</button>
+                    <span class="point-display zero">0 / 5</span>
+                    <button class="point-btn plus">+</button>
+                    <div class="quick-btns">
+                        <button class="quick-btn" data-value="0">0</button>
+                        <button class="quick-btn" data-value="max">max</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checklist-item" data-max-points="5" data-current-points="0">
+                <div class="item-content">
+                    <div class="item-title">Schleife eingebaut</div>
+                    <div class="item-hint">"Für i von..." oder "Solange..." – Wiederholung ist drin!</div>
+                </div>
+                <div class="point-controls">
+                    <button class="point-btn minus">−</button>
+                    <span class="point-display zero">0 / 5</span>
+                    <button class="point-btn plus">+</button>
+                    <div class="quick-btns">
+                        <button class="quick-btn" data-value="0">0</button>
+                        <button class="quick-btn" data-value="max">max</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checklist-item" data-max-points="5" data-current-points="0">
+                <div class="item-content">
+                    <div class="item-title">Verzweigung (If/Else) vorhanden</div>
+                    <div class="item-hint">Mindestens eine Wenn-Dann-Sonst Entscheidung.</div>
+                </div>
+                <div class="point-controls">
+                    <button class="point-btn minus">−</button>
+                    <span class="point-display zero">0 / 5</span>
+                    <button class="point-btn plus">+</button>
+                    <div class="quick-btns">
+                        <button class="quick-btn" data-value="0">0</button>
+                        <button class="quick-btn" data-value="max">max</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checklist-item" data-max-points="5" data-current-points="0">
+                <div class="item-content">
+                    <div class="item-title">Richtige Symbole genutzt</div>
+                    <div class="item-hint">Sequenz, Schleife und Verzweigung sind korrekt dargestellt.</div>
+                </div>
+                <div class="point-controls">
+                    <button class="point-btn minus">−</button>
+                    <span class="point-display zero">0 / 5</span>
+                    <button class="point-btn plus">+</button>
+                    <div class="quick-btns">
+                        <button class="quick-btn" data-value="0">0</button>
+                        <button class="quick-btn" data-value="max">max</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checklist-item" data-max-points="5" data-current-points="0">
+                <div class="item-content">
+                    <div class="item-title">Kein Python-Code im Plan!</div>
+                    <div class="item-hint">Keine print(), input() oder andere Befehle – nur deutsche Sätze!</div>
+                </div>
+                <div class="point-controls">
+                    <button class="point-btn minus">−</button>
+                    <span class="point-display zero">0 / 5</span>
+                    <button class="point-btn plus">+</button>
+                    <div class="quick-btns">
+                        <button class="quick-btn" data-value="0">0</button>
+                        <button class="quick-btn" data-value="max">max</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tips-box">
+                <h4>💡 Tipp</h4>
+                <ul>
+                    <li>Schreibe "Ausgabe: Hallo" statt print("Hallo")</li>
+                    <li>Schreibe "Eingabe: name" statt input()</li>
+                    <li>Speichere als XML UND PNG!</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Section 2: Code (40 Punkte) -->
+        <div class="section" data-section="code">
+            <h2>💻 Teil 2: Code (Python)</h2>
+            <p class="section-description">Deine Python-Konsolenanwendung.</p>
+            <div class="section-progress">
+                <span>Erreicht:</span>
+                <span class="points" id="codePoints">0</span>
+                <span>/ 40 Punkte</span>
+            </div>
+
+            <div class="checklist-item" data-max-points="5" data-current-points="0">
+                <div class="item-content">
+                    <div class="item-title">Programm startet ohne Fehler</div>
+                    <div class="item-hint">Klick auf "Run" → Keine roten Fehlermeldungen.</div>
+                </div>
+                <div class="point-controls">
+                    <button class="point-btn minus">−</button>
+                    <span class="point-display zero">0 / 5</span>
+                    <button class="point-btn plus">+</button>
+                    <div class="quick-btns">
+                        <button class="quick-btn" data-value="0">0</button>
+                        <button class="quick-btn" data-value="max">max</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checklist-item" data-max-points="10" data-current-points="0">
+                <div class="item-content">
+                    <div class="item-title">Kernfunktion funktioniert</div>
+                    <div class="item-hint">Vokabeln werden abgefragt / Produkte gespeichert / Aufgaben gestellt.</div>
+                </div>
+                <div class="point-controls">
+                    <button class="point-btn minus">−</button>
+                    <span class="point-display zero">0 / 10</span>
+                    <button class="point-btn plus">+</button>
+                    <div class="quick-btns">
+                        <button class="quick-btn" data-value="0">0</button>
+                        <button class="quick-btn" data-value="5">5</button>
+                        <button class="quick-btn" data-value="max">max</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checklist-item" data-max-points="5" data-current-points="0">
+                <div class="item-content">
+                    <div class="item-title">Input & Output funktionieren</div>
+                    <div class="item-hint">Du kannst etwas eingeben und bekommst eine Ausgabe.</div>
+                </div>
+                <div class="point-controls">
+                    <button class="point-btn minus">−</button>
+                    <span class="point-display zero">0 / 5</span>
+                    <button class="point-btn plus">+</button>
+                    <div class="quick-btns">
+                        <button class="quick-btn" data-value="0">0</button>
+                        <button class="quick-btn" data-value="max">max</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checklist-item" data-max-points="5" data-current-points="0">
+                <div class="item-content">
+                    <div class="item-title">Korrekte Einrückung</div>
+                    <div class="item-hint">Nach if, for, while immer 4 Leerzeichen eingerückt.</div>
+                </div>
+                <div class="point-controls">
+                    <button class="point-btn minus">−</button>
+                    <span class="point-display zero">0 / 5</span>
+                    <button class="point-btn plus">+</button>
+                    <div class="quick-btns">
+                        <button class="quick-btn" data-value="0">0</button>
+                        <button class="quick-btn" data-value="max">max</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checklist-item" data-max-points="10" data-current-points="0">
+                <div class="item-content">
+                    <div class="item-title">Sprechende Variablennamen</div>
+                    <div class="item-hint">"punkte" statt "p", "antwort" statt "a" – man versteht, was gemeint ist.</div>
+                </div>
+                <div class="point-controls">
+                    <button class="point-btn minus">−</button>
+                    <span class="point-display zero">0 / 10</span>
+                    <button class="point-btn plus">+</button>
+                    <div class="quick-btns">
+                        <button class="quick-btn" data-value="0">0</button>
+                        <button class="quick-btn" data-value="5">5</button>
+                        <button class="quick-btn" data-value="max">max</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checklist-item" data-max-points="5" data-current-points="0">
+                <div class="item-content">
+                    <div class="item-title">Programm endet sauber</div>
+                    <div class="item-hint">Keine Endlosschleife, kein Absturz – es gibt einen Abschluss.</div>
+                </div>
+                <div class="point-controls">
+                    <button class="point-btn minus">−</button>
+                    <span class="point-display zero">0 / 5</span>
+                    <button class="point-btn plus">+</button>
+                    <div class="quick-btns">
+                        <button class="quick-btn" data-value="0">0</button>
+                        <button class="quick-btn" data-value="max">max</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tips-box">
+                <h4>💡 Tipp</h4>
+                <ul>
+                    <li>Teste dein Programm mehrmals mit verschiedenen Eingaben!</li>
+                    <li>Achte auf Groß/Kleinschreibung bei Vergleichen</li>
+                    <li>Nutze das <a href="cheatsheet.html" style="color: var(--accent-color);">Python Cheatsheet</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Section 3: Dokumentation (20 Punkte) -->
+        <div class="section" data-section="doku">
+            <h2>📝 Teil 3: Dokumentation</h2>
+            <p class="section-description">Erklärungen und Kommentare in deinem Code.</p>
+            <div class="section-progress">
+                <span>Erreicht:</span>
+                <span class="points" id="dokuPoints">0</span>
+                <span>/ 20 Punkte</span>
+            </div>
+
+            <div class="checklist-item" data-max-points="5" data-current-points="0">
+                <div class="item-content">
+                    <div class="item-title">Header-Kommentar vorhanden</div>
+                    <div class="item-hint"># Programmname und kurze Beschreibung am Anfang.</div>
+                </div>
+                <div class="point-controls">
+                    <button class="point-btn minus">−</button>
+                    <span class="point-display zero">0 / 5</span>
+                    <button class="point-btn plus">+</button>
+                    <div class="quick-btns">
+                        <button class="quick-btn" data-value="0">0</button>
+                        <button class="quick-btn" data-value="max">max</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checklist-item" data-max-points="5" data-current-points="0">
+                <div class="item-content">
+                    <div class="item-title">Wichtige Stellen kommentiert</div>
+                    <div class="item-hint"># Schleifen, Verzweigungen und Listen kurz erklärt.</div>
+                </div>
+                <div class="point-controls">
+                    <button class="point-btn minus">−</button>
+                    <span class="point-display zero">0 / 5</span>
+                    <button class="point-btn plus">+</button>
+                    <div class="quick-btns">
+                        <button class="quick-btn" data-value="0">0</button>
+                        <button class="quick-btn" data-value="max">max</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checklist-item" data-max-points="5" data-current-points="0">
+                <div class="item-content">
+                    <div class="item-title">Ich kann mein Struktogramm erklären</div>
+                    <div class="item-hint">Du verstehst jeden Block und kannst erklären, was passiert.</div>
+                </div>
+                <div class="point-controls">
+                    <button class="point-btn minus">−</button>
+                    <span class="point-display zero">0 / 5</span>
+                    <button class="point-btn plus">+</button>
+                    <div class="quick-btns">
+                        <button class="quick-btn" data-value="0">0</button>
+                        <button class="quick-btn" data-value="max">max</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checklist-item" data-max-points="5" data-current-points="0">
+                <div class="item-content">
+                    <div class="item-title">Ich kann meinen Code erklären</div>
+                    <div class="item-hint">Du weißt, welche Zeile was macht und warum.</div>
+                </div>
+                <div class="point-controls">
+                    <button class="point-btn minus">−</button>
+                    <span class="point-display zero">0 / 5</span>
+                    <button class="point-btn plus">+</button>
+                    <div class="quick-btns">
+                        <button class="quick-btn" data-value="0">0</button>
+                        <button class="quick-btn" data-value="max">max</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tips-box">
+                <h4>💡 Tipp</h4>
+                <ul>
+                    <li>Kommentare beginnen mit # und werden ignoriert</li>
+                    <li>Schreibe Kommentare BEVOR du die Zeile schreibst</li>
+                    <li>Gute Kommentare erklären das WARUM, nicht das WAS</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Reset Button -->
+        <button class="reset-btn" onclick="resetProgress()">
+            🔄 Alle Punkte zurücksetzen
+        </button>
+
+        <footer>
+            <p>Gutes Gelingen! Bei Fragen: Hand heben 🙋</p>
+            <p style="margin-top: 0.5rem;">
+                <a href="examples.html">Beispiel-Struktogramme</a> · 
+                <a href="cheatsheet.html">Python Cheatsheet</a>
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeItems();
+            loadProgress();
+            updateAllProgress();
+        });
+
+        function initializeItems() {
+            document.querySelectorAll('.checklist-item').forEach(item => {
+                const maxPoints = parseInt(item.dataset.maxPoints);
+                const display = item.querySelector('.point-display');
+                
+                // Plus button
+                item.querySelector('.point-btn.plus').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    let current = parseInt(item.dataset.currentPoints);
+                    if (current < maxPoints) {
+                        item.dataset.currentPoints = current + 1;
+                        updateItemDisplay(item);
+                        saveProgress();
+                        updateAllProgress();
+                    }
+                });
+                
+                // Minus button
+                item.querySelector('.point-btn.minus').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    let current = parseInt(item.dataset.currentPoints);
+                    if (current > 0) {
+                        item.dataset.currentPoints = current - 1;
+                        updateItemDisplay(item);
+                        saveProgress();
+                        updateAllProgress();
+                    }
+                });
+                
+                // Quick buttons
+                item.querySelectorAll('.quick-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const value = btn.dataset.value;
+                        if (value === 'max') {
+                            item.dataset.currentPoints = maxPoints;
+                        } else {
+                            item.dataset.currentPoints = parseInt(value);
+                        }
+                        updateItemDisplay(item);
+                        saveProgress();
+                        updateAllProgress();
+                    });
+                });
+                
+                updateItemDisplay(item);
+            });
+        }
+
+        function updateItemDisplay(item) {
+            const current = parseInt(item.dataset.currentPoints);
+            const max = parseInt(item.dataset.maxPoints);
+            const display = item.querySelector('.point-display');
+            
+            display.textContent = `${current} / ${max}`;
+            display.classList.remove('full', 'partial', 'zero');
+            
+            if (current === max) {
+                display.classList.add('full');
+                item.classList.add('has-points');
+            } else if (current > 0) {
+                display.classList.add('partial');
+                item.classList.add('has-points');
+            } else {
+                display.classList.add('zero');
+                item.classList.remove('has-points');
+            }
+        }
+
+        function calculateGrade(points) {
+            if (points >= 96) return { grade: '1', name: 'sehr gut' };
+            if (points >= 91) return { grade: '1,5', name: 'sehr gut bis gut' };
+            if (points >= 85) return { grade: '2', name: 'gut' };
+            if (points >= 80) return { grade: '2,5', name: 'gut bis befriedigend' };
+            if (points >= 72) return { grade: '3', name: 'befriedigend' };
+            if (points >= 65) return { grade: '3,5', name: 'befriedigend bis ausreichend' };
+            if (points >= 55) return { grade: '4', name: 'ausreichend' };
+            if (points >= 46) return { grade: '4,5', name: 'ausreichend bis mangelhaft' };
+            if (points >= 30) return { grade: '5', name: 'mangelhaft' };
+            if (points >= 18) return { grade: '5,5', name: 'mangelhaft bis ungenügend' };
+            return { grade: '6', name: 'ungenügend' };
+        }
+
+        function updateAllProgress() {
+            let totalPoints = 0;
+            
+            // Section points
+            const sections = {
+                planung: { element: document.getElementById('planungPoints'), earned: 0 },
+                code: { element: document.getElementById('codePoints'), earned: 0 },
+                doku: { element: document.getElementById('dokuPoints'), earned: 0 }
+            };
+
+            document.querySelectorAll('.section').forEach(section => {
+                const sectionName = section.dataset.section;
+                section.querySelectorAll('.checklist-item').forEach(item => {
+                    const points = parseInt(item.dataset.currentPoints) || 0;
+                    totalPoints += points;
+                    if (sections[sectionName]) {
+                        sections[sectionName].earned += points;
+                    }
+                });
+            });
+
+            // Update section displays
+            Object.values(sections).forEach(section => {
+                if (section.element) {
+                    section.element.textContent = section.earned;
+                }
+            });
+
+            // Update total progress
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const percentage = (totalPoints / 100) * 100;
+
+            progressBar.style.width = percentage + '%';
+            progressText.textContent = totalPoints + ' / 100 Punkte';
+
+            // Change color based on progress
+            if (percentage >= 80) {
+                progressBar.style.background = 'linear-gradient(to right, var(--success-color), #22c55e)';
+            } else if (percentage >= 50) {
+                progressBar.style.background = 'linear-gradient(to right, var(--accent-color), var(--success-color))';
+            } else {
+                progressBar.style.background = 'linear-gradient(to right, var(--warning-color), var(--accent-color))';
+            }
+
+            // Update grade display
+            const gradeCircle = document.getElementById('gradeCircle');
+            const gradeName = document.getElementById('gradeName');
+            
+            if (totalPoints > 0) {
+                const gradeInfo = calculateGrade(totalPoints);
+                gradeCircle.textContent = gradeInfo.grade;
+                gradeName.textContent = gradeInfo.name;
+                
+                // Color the grade circle based on grade
+                if (gradeInfo.grade <= 2) {
+                    gradeCircle.style.background = 'linear-gradient(135deg, var(--success-color), #22c55e)';
+                } else if (gradeInfo.grade <= 4) {
+                    gradeCircle.style.background = 'linear-gradient(135deg, var(--warning-color), #f59e0b)';
+                } else {
+                    gradeCircle.style.background = 'linear-gradient(135deg, var(--danger-color), #ef4444)';
+                }
+            } else {
+                gradeCircle.textContent = '-';
+                gradeName.textContent = 'Noch keine Punkte';
+                gradeCircle.style.background = 'linear-gradient(135deg, var(--accent-color), #818cf8)';
+            }
+        }
+
+        function saveProgress() {
+            const state = [];
+            document.querySelectorAll('.checklist-item').forEach(item => {
+                state.push(parseInt(item.dataset.currentPoints) || 0);
+            });
+            localStorage.setItem('myfirstpythonapp_points', JSON.stringify(state));
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem('myfirstpythonapp_points');
+            if (saved) {
+                const state = JSON.parse(saved);
+                document.querySelectorAll('.checklist-item').forEach((item, index) => {
+                    if (state[index] !== undefined) {
+                        item.dataset.currentPoints = state[index];
+                        updateItemDisplay(item);
+                    }
+                });
+            }
+        }
+
+        function resetProgress() {
+            if (confirm('Möchtest du wirklich alle Punkte zurücksetzen?')) {
+                document.querySelectorAll('.checklist-item').forEach(item => {
+                    item.dataset.currentPoints = 0;
+                    updateItemDisplay(item);
+                });
+                localStorage.removeItem('myfirstpythonapp_points');
+                updateAllProgress();
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -348,6 +348,50 @@
             </div>
         </div>
 
+        <!-- Project 4: Taxi-Rechner -->
+        <div class="project-card">
+            <h2>🚕 Taxi-Rechner</h2>
+            <div class="nsd">
+                <div class="nsd-seq">Variable 'grundpreis' = 3.50</div>
+                <div class="nsd-seq">Variable 'preis_pro_km' = 2.00</div>
+                
+                <div class="nsd-seq">Ausgabe: "Willkommen beim Taxi-Rechner!"</div>
+                <div class="nsd-seq">Ausgabe: "Wähle die Währung: 1 = Euro, 2 = Dollar"</div>
+                <div class="nsd-seq">Eingabe: waehrung</div>
+                
+                <!-- If/Else for Currency -->
+                <div class="nsd-if">
+                    <div class="nsd-if-header">
+                        <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                            <line x1="0" y1="0" x2="100" y2="0" stroke="black" stroke-width="1" />
+                            <line x1="0" y1="0" x2="50" y2="100" stroke="black" stroke-width="1" />
+                            <line x1="100" y1="0" x2="50" y2="100" stroke="black" stroke-width="1" />
+                        </svg>
+                        <span class="nsd-if-condition">waehrung == "1"?</span>
+                        <span class="nsd-if-true-label">Ja</span>
+                        <span class="nsd-if-false-label">Nein</span>
+                    </div>
+                    <div class="nsd-if-body">
+                        <div class="nsd-if-true">
+                            <div class="nsd-seq">symbol = "€"</div>
+                        </div>
+                        <div class="nsd-if-false">
+                            <div class="nsd-seq">symbol = "$"</div>
+                            <div class="nsd-seq">grundpreis = grundpreis * 1.10</div>
+                            <div class="nsd-seq">preis_pro_km = preis_pro_km * 1.10</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="nsd-seq">Ausgabe: "Wie viele Kilometer?"</div>
+                <div class="nsd-seq">Eingabe: distanz</div>
+                
+                <div class="nsd-seq">gesamtpreis = grundpreis + (distanz * preis_pro_km)</div>
+                
+                <div class="nsd-seq" style="border-bottom: none;">Ausgabe: "Fahrpreis: " + gesamtpreis + " " + symbol</div>
+            </div>
+        </div>
+
     </div>
 
 </body>
